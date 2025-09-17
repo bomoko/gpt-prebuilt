@@ -1,0 +1,56 @@
+docker-compose-yaml: docker-compose.yml
+
+project: 'privategpt'
+
+container-registries:
+  ghcr:
+    description: "GitHub Container Registry for private packages"
+    url: ghcr.io
+
+
+tasks:
+  post-rollout:
+    - run:
+        name: Install Drupal if necessary
+        command: |
+          if [[ ! -f /app/web/sites/default/files/.drupal-installed ]] && ! drush status --fields=bootstrap | grep -q "Successful"; then
+            drush si minimal -y --existing-config --account-name "${DRUPAL_ADMIN_USER:-admin}" --account-pass "${DRUPAL_ADMIN_PASSWORD:-admin}"
+            # Create marker file to indicate successful installation
+            touch /app/web/sites/default/files/.drupal-installed
+          fi
+        service: cli
+    - run:
+        name: Create Keys for Simple OAuth if necessary
+        command: |
+          set -x
+
+          if [[ ! -f /app/web/sites/default/files/private/keys/private.key || ! -f /app/web/sites/default/files/private/keys/public.key ]]; then
+            mkdir -p /app/web/sites/default/files/private/keys
+
+            # Sometimes we get the following error on the first deploy:
+            #   There are no commands defined in the "simple-oauth" namespace.
+            drush cr
+
+            drush simple-oauth:generate-keys /app/web/sites/default/files/private/keys
+          fi
+        service: cli
+    - run:
+        name: Run Drupal deploy tasks
+        # Source before https://github.com/uselagoon/lagoon/issues/574
+        command: source /home/.bashrc && drush -y deploy
+        service: cli
+
+cronjobs:
+  - name: drush cron
+    schedule: '*/30 * * * *'
+    command: drush cron
+    service: cli
+# Routing is done via the LAGOON_ROUTES_JSON environment variable,
+# so we can change it per project.
+# environments:
+#   prod:
+#     routes:
+#       - chat:
+#           - ai.amazeeio.cloud
+#       - nginx:
+#           - login.ai.amazeeio.cloud
