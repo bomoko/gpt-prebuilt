@@ -16,7 +16,10 @@ x-user:
 
 services:
   chat:
-    image: ghcr.io/amazeelabs/private-gpt/chat:latest
+    build:
+      context: .
+      dockerfile: lagoon/chat.dockerfile
+    # image: ghcr.io/amazeelabs/private-gpt/chat:latest
     labels:
       lagoon.type: python-persistent
       lagoon.persistent: /app/.files
@@ -34,7 +37,10 @@ services:
       - default
 
   postgrespgvector:
-    image: ghcr.io/amazeelabs/private-gpt/postgrespgvector:latest
+    build:
+      context: .
+      dockerfile: lagoon/postgrespgvector.dockerfile
+    # image: ghcr.io/amazeelabs/private-gpt/postgrespgvector:latest
     labels:
       lagoon.type: postgres-single
     ports:
@@ -45,7 +51,10 @@ services:
       - db:/var/lib/postgresql/data
 
   cli: # cli container, will be used for executing composer and any local commands (drush, drupal, etc.)
-    image: ghcr.io/amazeelabs/private-gpt/cli:latest
+    # image: ghcr.io/amazeelabs/private-gpt/cli:latest
+    build:
+      context: .
+      dockerfile: lagoon/cli.dockerfile
     labels:
       # Lagoon Labels
       lagoon.type: cli-persistent
@@ -59,7 +68,10 @@ services:
       <<: *default-environment # loads the defined environment variables from the top
 
   nginx:
-    image: ghcr.io/amazeelabs/private-gpt/nginx:latest
+    # image: ghcr.io/amazeelabs/private-gpt/nginx:latest
+    build:
+      context: .
+      dockerfile: lagoon/nginx.dockerfile
     labels:
       lagoon.type: nginx-php-persistent
       lagoon.persistent: /app/web/sites/default/files/
@@ -75,7 +87,10 @@ services:
       - default
 
   php:
-    image: ghcr.io/amazeelabs/private-gpt/php:latest
+    # image: ghcr.io/amazeelabs/private-gpt/php:latest
+    build:
+      context: .
+      dockerfile: lagoon/php.dockerfile
     labels:
       lagoon.type: nginx-php-persistent
       lagoon.name: nginx
