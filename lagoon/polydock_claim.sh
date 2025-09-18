@@ -1,5 +1,5 @@
 #!/bin/sh
 
-ULI=`drush uli 2>/dev/null`
-
-echo "$ULI?destination=/"
+ULI=`drush ml:generate $DRUPAL_ADMIN_USER 2>/dev/null`                                                                                                                                        
+                                                                                                                                                                                              
+echo "$ULI"
