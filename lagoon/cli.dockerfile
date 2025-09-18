@@ -9,3 +9,4 @@ ENV DRUPAL_URL=https://nginx.${LAGOON_ENVIRONMENT}.${LAGOON_PROJECT}.${LAGOON_KU
 
 
 COPY ./lagoon/polydock_claim.sh /app/.lagoon/scripts/polydock_claim.sh
+RUN chmod +x /app/.lagoon/scripts/polydock_claim.sh
