@@ -1,11 +1,4 @@
-FROM ghcr.io/amazeelabs/private-gpt/cli:latest
-
-
-ARG LAGOON_ENVIRONMENT
-ARG LAGOON_PROJECT
-ARG LAGOON_KUBERNETES
-ENV CHAINLIT_URL=https://chat.${LAGOON_ENVIRONMENT}.${LAGOON_PROJECT}.${LAGOON_KUBERNETES}
-ENV DRUPAL_URL=https://nginx.${LAGOON_ENVIRONMENT}.${LAGOON_PROJECT}.${LAGOON_KUBERNETES}
+FROM drupal-base-cli:latest
 
 
 COPY ./lagoon/polydock_claim.sh /app/.lagoon/scripts/polydock_claim.sh

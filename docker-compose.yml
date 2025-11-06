@@ -15,41 +15,6 @@ x-user:
   user: '1000'
 
 services:
-  chat:
-    build:
-      context: .
-      dockerfile: lagoon/chat.dockerfile
-    # image: ghcr.io/amazeelabs/private-gpt/chat:latest
-    labels:
-      lagoon.type: python-persistent
-      lagoon.persistent: /app/.files
-      lagoon.name: chat
-    ports:
-      - '8080'
-    environment:
-      <<: *default-environment
-      LAGOON_LOCALDEV_URL: chat-${COMPOSE_PROJECT_NAME:-privategpt}.docker.amazee.io
-      AMAZEEAI_API_KEY: '${AMAZEEAI_API_KEY}'
-      AMAZEEAI_BASE_URL: '${AMAZEEAI_BASE_URL}'
-      PHOENIX_WORKING_DIR: '${PHOENIX_WORKING_DIR}'
-    networks:
-      - amazeeio-network
-      - default
-
-  postgrespgvector:
-    build:
-      context: .
-      dockerfile: lagoon/postgrespgvector.dockerfile
-    # image: ghcr.io/amazeelabs/private-gpt/postgrespgvector:latest
-    labels:
-      lagoon.type: postgres-single
-    ports:
-      - '5432'
-    environment:
-      <<: *default-environment
-    volumes:
-      - db:/var/lib/postgresql/data
-
   cli: # cli container, will be used for executing composer and any local commands (drush, drupal, etc.)
     # image: ghcr.io/amazeelabs/private-gpt/cli:latest
     build:
