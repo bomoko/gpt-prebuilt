@@ -1,2 +1,2 @@
-FROM drupal-base-nginx:latest
+FROM ghcr.io/lagoon-examples/drupal-base-nginx:latest
 

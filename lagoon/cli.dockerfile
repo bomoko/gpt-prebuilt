@@ -1,4 +1,4 @@
-FROM drupal-base-cli:latest
+FROM ghcr.io/lagoon-examples/drupal-base-cli:latest
 
 
 COPY ./lagoon/polydock_claim.sh /app/.lagoon/scripts/polydock_claim.sh
